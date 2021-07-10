@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProprietaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,6 +53,16 @@ class Proprietaire
      * @ORM\Column(type="integer")
      */
     private $telephone;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Document::class, mappedBy="proprietaire")
+     */
+    private $documents;
+
+    public function __construct()
+    {
+        $this->documents = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -137,6 +149,36 @@ class Proprietaire
     public function setTelephone(int $telephone): self
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Document[]
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setProprietaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getProprietaire() === $this) {
+                $document->setProprietaire(null);
+            }
+        }
 
         return $this;
     }
