@@ -2,11 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\DocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DocumentRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=DocumentRepository::class)
+ * @ApiResource(
+ *      collectionOperations={"get"},
+ *      itemOperations={"get"},
+ *)
  */
 class Document
 {
