@@ -21,8 +21,8 @@
                 <td>{{ annonce.titre }}</td>
                 <td>{{ annonce.dateAnnonce ? annonce.dateAnnonce|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="{{ path('annonce_show', {'id': annonce.id}) }}">show</a>
-                    <a href="{{ path('annonce_edit', {'id': annonce.id}) }}">edit</a>
+                    <a href="{{ path('annonce_show', {'id': annonce.id}) }}">afficher</a>
+                    <a href="{{ path('annonce_edit', {'id': annonce.id}) }}">editer</a>
                 </td>
             </tr>
         {% else %}
