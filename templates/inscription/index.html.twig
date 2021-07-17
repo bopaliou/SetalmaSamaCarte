@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+{{ include('/_header.html.twig') }}
+<div class="jumbotron mt-4 ml-4 mr-4">
+<p  class="text-center text-primary">Veillez remplir le formulaire ci-dessus pour s'inscrire?</p>
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="S'inscrire" class="btn btn-primary">
+{{ form_end(form)}}
+</div>
+
+{% endblock %}

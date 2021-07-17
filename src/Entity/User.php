@@ -31,10 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $email;
 
-    /**
-     * @ORM\Column(type="array")
-     */
-    private $roles = [];
+   
 
     /**
      * @var string The hashed password
@@ -47,9 +44,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $annonces;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nom;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $prenom;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Roles::class, inversedBy="users")
+     */
+    private $roles;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Document::class, mappedBy="user")
+     */
+    private $documents;
+
     public function __construct()
     {
         $this->annonces = new ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,7 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        $roles = array();
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
@@ -165,6 +184,80 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($annonce->getUser() === $this) {
                 $annonce->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString()
+    {
+        return $this->email;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function addRole(Roles $role): self
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Roles $role): self
+    {
+        $this->roles->removeElement($role);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Document[]
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getUser() === $this) {
+                $document->setUser(null);
             }
         }
 
